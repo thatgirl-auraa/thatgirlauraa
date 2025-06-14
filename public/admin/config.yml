@@ -1,0 +1,33 @@
+backend:
+  name: github
+  repo: thatgirl-auraa/thatgirlauraa
+  branch: main
+  base_url: https://api.github.com
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "picks"
+    label: "That Girl Picks"
+    folder: "src/content/picks"
+    create: true
+    format: "frontmatter"
+    extension: "mdx"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "journal"
+    label: "Glow Journal"
+    folder: "src/content/journal"
+    create: true
+    format: "frontmatter"
+    extension: "mdx"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" } 
