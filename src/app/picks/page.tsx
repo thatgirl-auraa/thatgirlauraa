@@ -1,8 +1,40 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
 
-export default function PicksPage() {
+interface Pick { 
+  slug: string; 
+  frontMatter: { 
+    title: string; 
+    image: string; 
+    description: string; 
+  }; 
+}
+
+async function getPicks(): Promise<Pick[]> {
+  const picksDirectory = path.join(process.cwd(), 'src/content/picks');
+  const filenames = fs.readdirSync(picksDirectory);
+
+  const picks = filenames.map((filename) => {
+    const filePath = path.join(picksDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data } = matter(fileContents);
+
+    return {
+      slug: filename.replace(/\.mdx$/, ''),
+      frontMatter: data as Pick['frontMatter'],
+    };
+  });
+
+  return picks;
+}
+
+export default async function PicksPage() {
+  const picks = await getPicks();
+
   return (
     <main className="min-h-screen py-20 px-4">
       {/* Header */}
@@ -18,33 +50,32 @@ export default function PicksPage() {
 
       {/* Collections Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Example Collection Card */}
-        <div className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-          <div className="relative h-64">
-            <Image
-              src="/images/collection-1.jpg"
-              alt="Wellness Collection"
-              fill
-              className="object-cover"
-            />
+        {picks.map((pick) => (
+          <div key={pick.slug} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <div className="relative h-64">
+              <Image
+                src={pick.frontMatter.image}
+                alt={pick.frontMatter.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-6">
+              <h2 className="font-playfair text-2xl text-dusty-mauve mb-3">
+                {pick.frontMatter.title}
+              </h2>
+              <p className="font-poppins text-gray-600 mb-4">
+                {pick.frontMatter.description}
+              </p>
+              <Link
+                href={`/picks/${pick.slug}`}
+                className="inline-block bg-sage-green text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition-all"
+              >
+                View Collection
+              </Link>
+            </div>
           </div>
-          <div className="p-6">
-            <h2 className="font-playfair text-2xl text-dusty-mauve mb-3">
-              Wellness Collection
-            </h2>
-            <p className="font-poppins text-gray-600 mb-4">
-              Essential products for your daily wellness routine
-            </p>
-            <Link
-              href="/picks/wellness-collection"
-              className="inline-block bg-sage-green text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition-all"
-            >
-              View Collection
-            </Link>
-          </div>
-        </div>
-
-        {/* Add more collection cards here */}
+        ))}
       </div>
 
       {/* Newsletter Section */}
@@ -73,4 +104,4 @@ export default function PicksPage() {
       </section>
     </main>
   )
-} 
+}
