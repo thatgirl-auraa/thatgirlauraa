@@ -22,8 +22,39 @@ const libre = Libre_Baskerville({
 })
 
 export const metadata: Metadata = {
-  title: 'That Girl Aura',
-  description: 'A lifestyle brand celebrating beauty, wellness, and mindful living',
+  title: 'That Girl Aura - Lifestyle, Beauty & Wellness',
+  description: 'Discover curated lifestyle picks, beauty tips, and wellness guidance for the modern woman. Join our community of mindful living enthusiasts.',
+  keywords: 'lifestyle, beauty, wellness, that girl, mindful living, self care, lifestyle picks',
+  authors: [{ name: 'That Girl Aura' }],
+  openGraph: {
+    title: 'That Girl Aura - Lifestyle, Beauty & Wellness',
+    description: 'Discover curated lifestyle picks, beauty tips, and wellness guidance for the modern woman.',
+    url: 'https://thatgirlauraa.com',
+    siteName: 'That Girl Aura',
+    images: [{ url: '/images/og-image.jpg', width: 1200, height: 630 }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'That Girl Aura - Lifestyle, Beauty & Wellness',
+    description: 'Discover curated lifestyle picks, beauty tips, and wellness guidance for the modern woman.',
+    images: ['/images/og-image.jpg'],
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -38,4 +69,4 @@ export default function RootLayout({
       </body>
     </html>
   )
-} 
+}
