@@ -20,17 +20,20 @@ export async function generateStaticParams() {
 async function getPick(slug: string) {
   const filePath = path.join(process.cwd(), 'src/content/picks', `${slug}.mdx`);
   const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
+  const { data } = matter(fileContents);
+
+  // Dynamically import the MDX file as a component
+  const MDXContent = await import(`../../../content/picks/${slug}.mdx`).then(mod => mod.default);
 
   return {
     frontMatter: data,
-    content,
+    MDXContent,
   };
 }
 
 export default async function PickPage({ params }: PickProps) {
   const { slug } = params;
-  const { frontMatter, content } = await getPick(slug);
+  const { frontMatter, MDXContent } = await getPick(slug);
 
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -41,7 +44,7 @@ export default async function PickPage({ params }: PickProps) {
         </div>
       )}
       <div className="prose">
-        <MDXRemote source={content} />
+        <MDXContent />
       </div>
     </div>
   );
