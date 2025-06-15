@@ -4,8 +4,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import Image from 'next/image';
 
-interface PickProps {
-  params: { slug: string };
+interface PageProps {
+  params: { [key: string]: string | string[] };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateStaticParams() {
@@ -31,8 +32,11 @@ async function getPick(slug: string) {
   };
 }
 
-export default async function PickPage({ params }: PickProps) {
-  const { slug } = params;
+export default async function PickPage({ params }: PageProps) {
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  if (!slug) {
+    return <div>Error: Slug not found</div>;
+  }
   const { frontMatter, MDXContent } = await getPick(slug);
 
   return (

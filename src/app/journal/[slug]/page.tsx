@@ -4,8 +4,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import Image from 'next/image';
 
-interface PostProps {
-  params: { slug: string };
+interface PageProps {
+  params: { [key: string]: string | string[] };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateStaticParams() {
@@ -31,8 +32,11 @@ async function getPost(slug: string) {
   };
 }
 
-export default async function PostPage({ params }: PostProps) {
-  const { slug } = params;
+export default async function PostPage({ params }: PageProps) {
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  if (!slug) {
+    return <div>Error: Slug not found</div>;
+  }
   const { frontMatter, MDXContent } = await getPost(slug);
 
   return (
